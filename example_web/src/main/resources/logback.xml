@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="true" scan="true" scanPeriod="30 seconds">
+
+    <!-- custom configuration start -->
+    
+    <property name="domain" value="example"/>
+    <!-- comments this line when specify main_alias in java code -->
+    <property name="main_alias" value="example"/>
+    
+    <if condition='isNull("main_alias")'>
+        <then>
+            <property name="main_alias" value="${domain}"/>
+        </then>
+    </if>
+    
+    <!-- custom configuration end -->
+    
+    <property name="base_path" value="/data/platform/logs/${domain}.demon.com/${main_alias}/${main_alias}"/>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				[%t][%level] %d{yyyy-MM-dd HH:mm:ss SSS} [%c{0}:%line] - %m%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="ERROR-OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>
+			${base_path}_error.log
+		</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				[%t][%level] %d{yyyy-MM-dd HH:mm:ss SSS} [%c{0}:%line] - %m%n
+			</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${base_path}_error.log.%d{yyyy-MM-dd}
+			</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+	</appender>
+	
+	<appender name="WARN-OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>
+			${base_path}_warn.log
+		</file>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>
+				[%t][%level] %d{yyyy-MM-dd HH:mm:ss SSS} [%c{0}:%line] - %m%n
+			</pattern>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>
+				${base_path}_warn.log.%d{yyyy-MM-dd}
+			</fileNamePattern>
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">  
+        <discriminator>
+            <key>LOG_FILE_NAME</key>
+            <defaultValue>info</defaultValue>
+        </discriminator>
+        <sift>
+			<appender name="INFO-OUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>
+					${base_path}_${LOG_FILE_NAME}.log
+				</file>
+				<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+					<pattern>
+						[%t][%level] %d{yyyy-MM-dd HH:mm:ss SSS} [%c{0}:%line] - %m%n
+					</pattern>
+				</encoder>
+				<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+					<level>INFO</level>
+					<onMatch>ACCEPT</onMatch>
+					<onMismatch>NEUTRAL</onMismatch>
+				</filter>
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<fileNamePattern>
+						${base_path}_${LOG_FILE_NAME}.log.%d{yyyy-MM-dd}
+					</fileNamePattern>
+					<maxHistory>5</maxHistory>
+				</rollingPolicy>
+			</appender>
+		</sift>
+    </appender>
+    
+    <appender name="FILE-THREAD-QUEUE" class="ch.qos.logback.classic.AsyncAppender">
+    	<discardingThreshold>0</discardingThreshold>
+    	<queueSize>10000</queueSize>
+    	<appender-ref ref="FILE-THREAD" />
+    </appender>
+    
+	<root level="INFO">
+		 <appender-ref ref="STDOUT" />
+		<appender-ref ref="ERROR-OUT" />
+		<appender-ref ref="WARN-OUT" />
+		<appender-ref ref="FILE-THREAD-QUEUE" />
+	</root>
+	
+</configuration>
