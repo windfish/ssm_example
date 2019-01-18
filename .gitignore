@@ -1,0 +1,12 @@
+example_interface/.settings/
+example_interface/target/
+example_interface/.classpath
+example_interface/.project
+example_service/.settings/
+example_service/target/
+example_service/.classpath
+example_service/.project
+example_web/.settings/
+example_web/target/
+example_web/.classpath
+example_web/.project
