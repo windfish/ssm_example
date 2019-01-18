@@ -12,7 +12,7 @@
         <example.version>1.0</example.version>
 
         <!-- dubbox libs -->
-        <spring.bom.version>3.2.9.RELEASE</spring.bom.version>
+        <spring.bom.version>4.3.18.RELEASE</spring.bom.version>
         <netty_version>3.7.0.Final</netty_version>
         <zookeeper_version>3.4.6</zookeeper_version>
         <zkclient_version>0.1</zkclient_version>
@@ -274,11 +274,6 @@
             <version>1.3</version>
         </dependency>
         <dependency>
-            <groupId>commons-fileupload</groupId>
-            <artifactId>commons-fileupload</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-        <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.3</version>
@@ -309,7 +304,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.5</version>
+            <version>1.2.31</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
